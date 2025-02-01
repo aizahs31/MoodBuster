@@ -3,34 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera</title>
+    <title>Aura Zen</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        video, canvas {
+            display: block;
+            margin: 10px auto;
+            background: black;
+        }
+        button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #speechBox {
+            margin-top: 20px;
+            padding: 15px;
+            width: 80%;
+            min-height: 50px;
+            border: 2px solid black;
+            display: inline-block;
+            background: #f1f1f1;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Camera</h1>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="snap">Snap Photo</button>
-    <canvas id="canvas" width="640" height="480"></canvas>
+    <h1>AuraZen</h1>
+    <video id="webcam" autoplay playsinline width="320" height="240"></video>
+    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+    
+    <button id="toggleCamera">📷 Turn Off Camera</button>
+    <button id="toggleMic">🎤 Turn Off Mic</button>
+
+    <p><strong>Predicted Mood:</strong> <span id="mood">Waiting...</span></p>
+
+    <h2>Speech-to-Text</h2>
+    <div id="speechBox">Speak something...</div>
 
     <script>
-        // Access the camera and microphone
-        const video = document.getElementById('video');
-
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                console.error("Error accessing the camera and microphone: ", err);
-            });
-
-        // Capture a photo
+        const video = document.getElementById('webcam');
         const canvas = document.getElementById('canvas');
-        const snap = document.getElementById('snap');
-        const context = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
+        const moodText = document.getElementById('mood');
+        const toggleCameraBtn = document.getElementById('toggleCamera');
+        const toggleMicBtn = document.getElementById('toggleMic');
+        const speechBox = document.getElementById('speechBox');
 
-        snap.addEventListener('click', () => {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        let mediaStream = null;
+        let audioTrack = null;
+        let videoTrack = null;
+        let recognition = null;
+        let micActive = true;
+
+        // Start Webcam & Mic
+        async function startWebcam() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                video.srcObject = mediaStream;
+                videoTrack = mediaStream.getVideoTracks()[0];
+                audioTrack = mediaStream.getAudioTracks()[0];
+
+                // Start Speech Recognition
+                startSpeechRecognition();
+            } catch (error) {
+                console.error("Error accessing webcam:", error);
+                moodText.innerText = "Webcam access denied!";
+            }
+        }
+
+        // Toggle Camera
+        toggleCameraBtn.addEventListener('click', () => {
+            if (videoTrack && videoTrack.enabled) {
+                videoTrack.enabled = false;
+                video.style.display = "none";
+                canvas.style.display = "block";
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                toggleCameraBtn.innerText = "📹 Turn On Camera";
+            } else {
+                videoTrack.enabled = true;
+                video.style.display = "block";
+                canvas.style.display = "none";
+                toggleCameraBtn.innerText = "📷 Turn Off Camera";
+            }
         });
+
+        // Toggle Microphone
+        toggleMicBtn.addEventListener('click', () => {
+            if (audioTrack && audioTrack.enabled) {
+                audioTrack.enabled = false;
+                micActive = false;
+                toggleMicBtn.innerText = "🔇 Turn On Mic";
+            } else {
+                audioTrack.enabled = true;
+                micActive = true;
+                toggleMicBtn.innerText = "🎤 Turn Off Mic";
+            }
+        });
+
+        // Speech Recognition Setup
+        function startSpeechRecognition() {
+            if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                speechBox.innerText = "Speech Recognition Not Supported!";
+                return;
+            }
+
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "en-US";
+
+            recognition.onresult = (event) => {
+                let transcript = "";
+                for (let i = 0; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                speechBox.innerText = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                speechBox.innerText = "Error in speech recognition: " + event.error;
+            };
+
+            recognition.onend = () => {
+                if (micActive) recognition.start(); // Restart recognition if mic is still active
+            };
+
+            recognition.start();
+        }
+
+        startWebcam();
     </script>
 </body>
 </html>
