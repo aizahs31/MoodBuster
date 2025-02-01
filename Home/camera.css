@@ -75,3 +75,27 @@ button:hover {
     max-width: 400px;
     text-align: center;
 }
+
+/* Chat Icon (Floating Button) */
+.chat-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #FF8C00;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s, transform 0.2s;
+}
+
+.chat-icon:hover {
+    background-color: #FFA500;
+    transform: scale(1.1);
+}

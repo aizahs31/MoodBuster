@@ -1,39 +1,60 @@
-const chatBox = document.getElementById("chat-box");
-const userInput = document.getElementById("user-input");
+document.addEventListener("DOMContentLoaded", function () {
+    const chatBox = document.getElementById("chat-box");
+    const inputField = document.getElementById("user-input");
+    const sendButton = document.getElementById("send-btn");
 
-async function sendMessage() {
-    const message = userInput.value.trim();
-    if (!message) return;
+    sendButton.onclick = sendMessage;
+    inputField.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
 
-    addMessage("You: " + message, "user-message");
-    userInput.value = "";
+    function sendMessage() {
+        const userMessage = inputField.value.trim();
+        if (userMessage === "") return;
 
-    try {
-        const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer YOUR_DEEPSEEK_API_KEY"
-            },
-            body: JSON.stringify({
-                model: "deepseek-chat",
-                messages: [{ role: "user", content: message }]
-            })
-        });
+        addMessageToChat(userMessage, "user");
+        inputField.value = "";
 
-        const data = await response.json();
-        const botMessage = data.choices[0].message.content;
-        addMessage("AI Buddy: " + botMessage, "bot-message");
-    } catch (error) {
-        console.error("Error:", error);
-        addMessage("AI Buddy: Sorry, I couldn't fetch a response.", "bot-message");
+        fetchBotResponse(userMessage);
     }
-}
 
-function addMessage(text, className) {
-    const messageElement = document.createElement("div");
-    messageElement.className = className;
-    messageElement.innerText = text;
-    chatBox.appendChild(messageElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+    function addMessageToChat(message, sender) {
+        const messageDiv = document.createElement("div");
+        messageDiv.innerText = message;
+        messageDiv.classList.add("message");
+
+        if (sender === "user") {
+            messageDiv.classList.add("user-message"); 
+        } else {
+            messageDiv.classList.add("bot-message"); 
+        }
+
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function fetchBotResponse(userMessage) {
+        try {
+            const response = await fetch("YOUR_API_ENDPOINT_HERE", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer YOUR_API_KEY_HERE"
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            addMessageToChat(data.reply, "bot");
+        } catch (error) {
+            console.error("Error:", error);
+            addMessageToChat("Sorry, something went wrong.", "bot");
+        }
+    }
+});

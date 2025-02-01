@@ -113,4 +113,10 @@ function changeMood() {
     }, 1000);
 }
 
+// Function to open chat.html in a new tab
+function openChat() {
+    window.open("/Chat/chat.html", "_blank");
+}
+
+
 startWebcam();
