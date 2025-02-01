@@ -7,20 +7,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
     <link rel="stylesheet" href="camera.css">
-
-    
 </head>
 <body>
     <h1>Aura Zen</h1>
-    <video id="webcam" autoplay playsinline width="320" height="240"></video>
-    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-    
-    <button id="toggleCamera">📷 Turn Off Camera</button>
-    <button id="toggleMic">🎤 Turn Off Mic</button>
-
-    <p><strong>Predicted Mood:</strong> <span id="mood">😊 Happy</span></p>
-
-    <div id="speechBox">Speak something...</div>
+    <div class="main-container">
+        <video id="webcam" autoplay playsinline width="320" height="240"></video>
+        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        <button class="toggleCamera">📷 Turn Off Camera</button>
+        <button class="toggleMic">🎤 Turn Off Mic</button>
+        <p><strong>Predicted Mood:</strong> <span id="mood">😊 Happy</span></p>
+        <div id="speechBox">Speak something...</div>
+    </div>
 </body>
 <script src="camera.js"></script>
 </html>

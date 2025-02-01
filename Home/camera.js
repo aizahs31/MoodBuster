@@ -1,10 +1,9 @@
-
 const video = document.getElementById('webcam');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const moodText = document.getElementById('mood');
-const toggleCameraBtn = document.getElementById('toggleCamera');
-const toggleMicBtn = document.getElementById('toggleMic');
+const toggleCameraBtn = document.querySelector('.toggleCamera');
+const toggleMicBtn = document.querySelector('.toggleMic');
 const speechBox = document.getElementById('speechBox');
 
 let mediaStream = null;
@@ -19,8 +18,8 @@ const moods = [
     { mood: "Sad", emoji: "😢" },
     { mood: "Angry", emoji: "😡" },
     { mood: "Neutral", emoji: "😐" },
-    { mood: "Laughing", emoji: "😂" },
-      
+    { mood: "Excited", emoji: "🤩" },
+    { mood: "Relaxed", emoji: "😌" },
 ];
 
 // Start Webcam & Mic
@@ -115,4 +114,3 @@ function changeMood() {
 }
 
 startWebcam();
-

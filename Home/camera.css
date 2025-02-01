@@ -1,34 +1,77 @@
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        video, canvas {
-            display: block;
-            margin: 10px auto;
-            background: black;
-        }
-        button {
-            font-size: 18px;
-            margin: 10px;
-            padding: 10px;
-            cursor: pointer;
-        }
-        #speechBox {
-            margin-top: 20px;
-            padding: 15px;
-            width: 80%;
-            min-height: 50px;
-            border: 2px solid black;
-            display: inline-block;
-            background: #f1f1f1;
-            font-size: 18px;
-        }
-        #mood {
-            font-size: 24px;
-            font-weight: bold;
-            transition: opacity 1s ease-in-out;
-            opacity: 1;
-        }
-        #mood.hidden {
-            opacity: 0;
-        }
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Full-Screen Centered Layout */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #FFD700, #FFA500); /* Bright Yellow & Orange */
+    color: black;
+    text-align: center;
+}
+
+/* Camera & Chatbox Container */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Video Styling */
+video {
+    width: 320px;
+    height: 240px;
+    background: black;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+button {
+    background: #FFA500;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    border-radius: 50px;
+    font-weight: bold;
+    margin: 5px;
+}
+
+button:hover {
+    background: #FF8C00;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+}
+
+/* Mood Prediction */
+#mood {
+    font-size: 22px;
+    font-weight: bold;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Chatbox */
+#speechBox {
+    margin-top: 10px;
+    padding: 15px;
+    width: 90%;
+    min-height: 50px;
+    border: 2px solid black;
+    background: #f1f1f1;
+    font-size: 18px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+}
