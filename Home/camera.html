@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera</title>
-    <link rel="stylesheet" href="camera.css">
 </head>
 <body>
     <h1>Camera</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Snap Photo</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+        // Access the camera
+        const video = document.getElementById('video');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: ", err);
+            });
+//capturing the photo
+        // Capture a photo
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const context = canvas.getContext('2d');
+
+        snap.addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+    </script>
 </body>
 </html>
