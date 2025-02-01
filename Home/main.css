@@ -55,6 +55,7 @@ p {
     transition: background 0.3s, transform 0.2s;
     border-radius: 50px;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .cta-button:hover {
